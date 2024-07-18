@@ -47,16 +47,40 @@
     const db = firebase.firestore();
 
 
-    
+
     // fecha y hora actuales
     const date = new Date().toLocaleDateString();
     const time = new Date().toTimeString();
 
+    // Function to get visit data
+    function getVisitData() {
+        const visitDate = new Date();
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const userAgent = navigator.userAgent;
+        const language = navigator.language;
+        const platform = navigator.platform;
+        const screenWidth = screen.width;
+        const screenHeight = screen.height;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        const referrer = document.referrer;
+
+        return {
+            date: date,
+            time: time,
+            visitDate: visitDate.toISOString(),
+            timeZone,
+            userAgent,
+            language,
+            platform,
+            screenResolution: `${screenWidth}x${screenHeight}`,
+            windowSize: `${windowWidth}x${windowHeight}`,
+            referrer
+        };
+    }
+
     // registrar carga de la pagina
-    db.collection("visitas").add({
-        date: date,
-        time: time,
-    })
+    db.collection("visitas").add(getVisitData())
         .then((docRef) => {
             console.log("Document in visits written with ID: ", docRef.id);
         })
